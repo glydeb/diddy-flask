@@ -1,0 +1,22 @@
+# Python
+*.pyc
+__pycache__/
+.venv/
+*.env
+
+# Flask
+instance/
+webapp.egg-info/
+webapp/__pycache__/
+webapp/static/
+webapp/uploads/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Environment variables
+.env
