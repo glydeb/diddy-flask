@@ -1,8 +1,12 @@
 from flask import Flask, jsonify, request
+from .extensions import api
 from mongoengine import connect, Document, StringField
 
-app = Flask(__name__)
-connect('diddy')
+def create_app():
+    app = Flask(__name__)
+    connect('diddy')
+    api.init_app(app)
+    return app
 
 class User(Document):
     name = StringField(required=True, max_length=100)
@@ -39,6 +43,3 @@ def delete_user(user_id):
     user = User.objects.get(id=user_id)
     user.delete()
     return '', 204
-
-if __name__ == '__main__':
-    app.run()
