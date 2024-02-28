@@ -1,5 +1,5 @@
 import pytest
-from app import create_app
+from app import create_app, db
 
 @pytest.fixture()
 def app():
@@ -23,3 +23,10 @@ def client(app):
 @pytest.fixture()
 def runner(app):
     return app.test_cli_runner()
+
+@pytest.fixture
+def test_user(app):
+    user = db.User(name='John Doe', email='johndoe@example.com')
+    db.session.add(user)
+    db.session.commit()
+    return user
