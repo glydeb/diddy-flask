@@ -2,9 +2,9 @@ from flask import Flask
 from .extensions import api, db
 from .api_namespace import ns
 
-def create_app():
+def create_app(database_uri="sqlite:///db.sqlite3"):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
 
     db.init_app(app)
 

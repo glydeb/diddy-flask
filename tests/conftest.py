@@ -1,12 +1,12 @@
 import pytest
 from app import create_app, db
+from app.models import User
 
 @pytest.fixture()
 def app():
-    app = create_app()
-    app.config.update({
-        "TESTING": True,
-    })
+    app = create_app("sqlite://")
+    with app.app_context():
+        db.create_all()
 
     # other setup can go here
 
@@ -23,10 +23,3 @@ def client(app):
 @pytest.fixture()
 def runner(app):
     return app.test_cli_runner()
-
-@pytest.fixture
-def test_user(app):
-    user = db.User(name='John Doe', email='johndoe@example.com')
-    db.session.add(user)
-    db.session.commit()
-    return user
