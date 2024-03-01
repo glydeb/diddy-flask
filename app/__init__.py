@@ -5,6 +5,7 @@ from .api_namespace import ns
 def create_app(database_uri="sqlite:///db.sqlite3"):
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
+    app.config['RESTX_ERROR_404_HELP'] = False
 
     db.init_app(app)
 

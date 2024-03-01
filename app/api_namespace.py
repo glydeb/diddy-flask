@@ -1,9 +1,8 @@
-from flask import jsonify, request
 from flask_restx import Namespace, Resource
 from .models import User
-from flask_sqlalchemy import SQLAlchemy
 from .extensions import db
 from .serializers import user_model, user_input_model
+from werkzeug.exceptions import NotFound, BadRequest
 
 ns = Namespace('api', description='Diddy API')
 
@@ -14,18 +13,22 @@ class UserList(Resource):
         return User.query.all()
 
     @ns.expect(user_input_model)
-    @ns.marshal_with(user_model, code=201)
+    @ns.marshal_with(user_model)
     def post(self):
         user = User(name=ns.payload['name'], email=ns.payload['email'])
         db.session.add(user)
         db.session.commit()
-        return user
+        return user, 201
 
-# @ns.route('/users/<user_id>')
-# class User(Resource):
-#     def get(self, user_id):
-#         user = User.objects.get(id=user_id)
-#         return jsonify(user), 200
+@ns.route('/users/<user_id>')
+class SingleUser(Resource):
+    @ns.marshal_list_with(user_model)
+    def get(self, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        if user:
+            return user, 200
+        else:
+            raise NotFound(f"User with id {user_id} not found")
 
 #     def put(self, user_id):
 #         data = request.get_json()
