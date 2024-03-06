@@ -10,5 +10,16 @@ user_model = api.model('User', {
 
 user_input_model = api.model('User', {
     "name": fields.String,
-    "email": fields.String
+    "email": fields.String,
+    "password": fields.String
+})
+
+user_update_model = api.model('User', {
+    "name": fields.String,
+    "email": fields.String,
+})
+
+authenticate_model = api.model('UserInput', {
+    'email': fields.String(required=True, description='email'),
+    'password': fields.String(required=True, description='Password')
 })
