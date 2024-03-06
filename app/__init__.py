@@ -27,7 +27,6 @@ def create_app(database_uri="sqlite:///db.sqlite3"):
     def user_lookup_callback(_jwt_header, jwt_data):
         identity = jwt_data["sub"]
         query = db.select(User).where(User.id == identity)
-        user = db.execute(query)
         return db.execute(query)
 
     return app
