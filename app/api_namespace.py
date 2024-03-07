@@ -5,7 +5,7 @@ from .serializers import user_model, user_input_model, user_update_model, authen
 from werkzeug.exceptions import NotFound, Unauthorized
 from flask import request
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, current_user
 
 authorizations = {
     "jsonWebToken": {
@@ -23,7 +23,10 @@ def handle_no_result_exception(error):
 @ns.route('/users')
 class UserList(Resource):
     @ns.marshal_list_with(user_model)
+    @jwt_required()
     def get(self):
+        print(request.headers)
+        print(current_user)
         return User.query.all()
 
     @ns.expect(user_input_model)
@@ -37,6 +40,9 @@ class UserList(Resource):
 
 @ns.route('/users/<user_id>')
 class SingleUser(Resource):
+    # protect all routes in this class with jwt_required
+    method_decorators = [jwt_required()]
+
     @ns.marshal_with(user_model)
     def get(self, user_id):
         user = db.get_or_404(User, user_id)
