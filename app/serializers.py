@@ -17,6 +17,7 @@ user_input_model = api.model('User', {
 user_update_model = api.model('User', {
     "name": fields.String,
     "email": fields.String,
+    "admin": fields.Boolean # only admin can change this field
 })
 
 authenticate_model = api.model('UserInput', {

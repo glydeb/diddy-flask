@@ -23,11 +23,13 @@ def handle_no_result_exception(error):
 @ns.route('/users')
 class UserList(Resource):
     @ns.marshal_list_with(user_model)
+    @ns.doc(security="jsonWebToken")
     @jwt_required()
     def get(self):
-        print(request.headers)
-        print(current_user)
-        return User.query.all()
+        if current_user.admin:
+            return User.query.all(), 200
+        else: 
+            return User.query.filter_by(id=current_user.id).all(), 200
 
     @ns.expect(user_input_model)
     @ns.marshal_with(user_model)
@@ -39,6 +41,7 @@ class UserList(Resource):
         return user, 201
 
 @ns.route('/users/<user_id>')
+@ns.doc(security="jsonWebToken")
 class SingleUser(Resource):
     # protect all routes in this class with jwt_required
     method_decorators = [jwt_required()]
